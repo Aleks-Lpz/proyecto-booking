@@ -15,7 +15,8 @@ on:
           - '100'
           - '250'
           - '500'
-
+permissions:
+  contents: write
 jobs:
   train:
     runs-on: ubuntu-latest
