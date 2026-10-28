@@ -7,7 +7,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.pipeline import Pipeline
 from joblib import dump
 
-# Leer el número de hojas desde la variable de entorno (pasada por GitHub Actions o local)
+# Leer el número de hojas desde la variable de entorno
 max_leaves_env = os.environ.get('INPUT_MAX_LEAF_NODES') or os.environ.get('MAX_LEAF_NODES', '50')
 max_leaf_nodes = int(max_leaves_env)
 print(f"--> Entrenando modelo con max_leaf_nodes = {max_leaf_nodes}")
@@ -15,14 +15,19 @@ print(f"--> Entrenando modelo con max_leaf_nodes = {max_leaf_nodes}")
 # 1. Cargar el dataset y limpiar nulos
 df = pd.read_csv('hotel_bookings.csv').dropna(subset=['adr'])
 
-features = ['hotel', 'market_segment', 'distribution_channel', 'customer_type']
+# Definir características categóricas y numéricas para que el árbol pueda dividirse dinámicamente
+categorical_features = ['hotel', 'market_segment', 'distribution_channel', 'customer_type']
+numerical_features = ['lead_time', 'adults', 'total_of_special_requests']
+
+features = categorical_features + numerical_features
 X = df[features]
 y = df['adr']
 
-# 2. Pipeline con transformador
+# 2. Pipeline con transformador para procesar ambos tipos de datos
 preprocessor = ColumnTransformer(
     transformers=[
-        ('cat', OneHotEncoder(handle_unknown='ignore'), features)
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features),
+        ('num', 'passthrough', numerical_features)
     ]
 )
 
