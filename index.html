@@ -55,6 +55,18 @@
                             <option value="Transient-Party">Transient-Party</option>
                         </select>
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Días de Anticipación (Lead Time):</label>
+                        <input type="number" id="lead_time" value="40" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Número de Adultos:</label>
+                        <input type="number" id="adults" value="2" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Peticiones Especiales:</label>
+                        <input type="number" id="total_of_special_requests" value="0" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
                 </div>
 
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition mt-4 shadow">
@@ -109,7 +121,10 @@
                 hotel: document.getElementById('hotel').value,
                 market_segment: document.getElementById('market_segment').value,
                 distribution_channel: document.getElementById('distribution_channel').value,
-                customer_type: document.getElementById('customer_type').value
+                customer_type: document.getElementById('customer_type').value,
+                lead_time: parseFloat(document.getElementById('lead_time').value),
+                adults: parseInt(document.getElementById('adults').value),
+                total_of_special_requests: parseInt(document.getElementById('total_of_special_requests').value)
             };
 
             const apiUrl = 'https://hotel-ml-api-w5a0.onrender.com/predict';
