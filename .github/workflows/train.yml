@@ -1,0 +1,50 @@
+name: Reentrenar Modelo de Hotel
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_leaf_nodes:
+        description: 'Número máximo de hojas (max_leaf_nodes)'
+        required: true
+        default: '50'
+        type: choice
+        options:
+          - '5'
+          - '25'
+          - '50'
+          - '100'
+          - '250'
+          - '500'
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Copiar repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Instalar dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Ejecutar entrenamiento
+      env:
+        MAX_LEAF_NODES: ${{ github.event.inputs.max_leaf_nodes }}
+      run: python train.py
+
+    - name: Guardar y commitear el nuevo modelo
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        git add model/
+        git commit -m "🤖 Reentrenamiento automático con ${{ github.event.inputs.max_leaf_nodes }} hojas" || echo "Sin cambios"
+        git push
